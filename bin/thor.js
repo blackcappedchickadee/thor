@@ -31,7 +31,7 @@ cli.usage('[options] ws://localhost')
 //
 if (!cli.args.length) return [
     'Thor:'
-  , 'Odin is disapointed you... pithy human! You forgot to supply the urls.'
+  , 'Odin is displeased in you - pithy human! You forgot to supply the urls. (is Loki involved?)'
 ].forEach(function stderr(line) {
   console.error(line);
 });

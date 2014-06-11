@@ -49,10 +49,14 @@ process.on('message', function message(task) {
     write(socket, task, task.id);
 
     // As the `close` event is fired after the internal `_socket` is cleaned up
-    // we need to do some hacky shit in order to tack the bytes send.
+    // we need to do some hacky stuff in order to tack the bytes send.
   });
 
   socket.on('message', function message(data) {
+
+    //console.log('data = ' + data);
+
+
     process.send({
       type: 'message', latency: Date.now() - socket.last, concurrent: concurrent,
       id: task.id
@@ -91,7 +95,7 @@ process.on('message', function message(task) {
 });
 
 /**
- * Helper function from writing messages to the socket.
+ * Helper function which allows writing messages to the socket.
  *
  * @param {WebSocket} socket WebSocket connection we should write to
  * @param {Object} task The given task
@@ -100,13 +104,12 @@ process.on('message', function message(task) {
  * @api private
  */
 function write(socket, task, id, fn) {
-  session[binary ? 'binary' : 'utf8'](task.size, function message(err, data) {
+  //session[binary ? 'binary' : 'utf8'](task.size, function message(err, data) {
+
+  session['jsonmsg'](task.size, function message(err, data) {
     var start = socket.last = Date.now();
 
-    socket.send(data, {
-      binary: binary,
-      mask: masked
-    }, function sending(err) {
+    socket.send(data, function sending(err) {
       if (err) {
         process.send({ type: 'error', message: err.message, concurrent: --concurrent, id: id });
 

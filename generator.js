@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * Generate a UTF-8 messages that we will be send to a connected client.
+ * Generate a UTF-8 message that will be sent to a connected client.
  *
  * @async
  * @param {Number} size The specified in bytes for the message.
@@ -20,7 +20,7 @@ exports.utf8 = function utf(size, fn) {
 };
 
 /**
- * Generate a binary message that we will be send to a connected client.
+ * Generate a binary message that will be sent to a connected client.
  *
  * @async
  * @param {Number} size The specified in bytes for the message.
@@ -36,6 +36,32 @@ exports.binary = function binary(size, fn) {
 
   cached = cache[key] = new Buffer(size);
   fn(undefined, cached);
+};
+
+
+exports.jsonmsg = function jsonmsg(size, fn) {
+    var key = 'jsonmsg::' + size
+        , cached = cache[key];
+
+    var testMessage = {
+        message: '',
+        sessionId: '',
+        callId: '1000000000',
+        did: '2070000000',
+        extension: '11111',
+        messageDate: '2014-06-11 12:21:39.268'
+    };
+
+    var testMessageJson = JSON.stringify(testMessage);
+    //console.log('testMessageJson = ' + testMessageJson);
+
+    // We have a cached version of this size, return that instead.
+    if (cached) return fn(undefined, cached);
+
+    //var localBuffer = new Buffer(200);
+    //localBuffer.write(testMessageJson, "ascii");
+    cached = cache[key] = testMessageJson;
+    fn(undefined, cached);
 };
 
 //
